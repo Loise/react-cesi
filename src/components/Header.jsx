@@ -4,8 +4,8 @@ import Toolbar from '@mui/material/Toolbar';
 import { NavLink } from "react-router-dom";
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from "react-router-dom";
-import axios from 'axios';
 import Grid from '@mui/material/Grid';
+import { fetch } from '../tools/api'
 
 const useStyles = makeStyles({
     navlink: {
@@ -22,6 +22,7 @@ const useStyles = makeStyles({
 });
 
 export default function Header(props) {
+    const {setErrorMessage} = props;
     const classes = useStyles({ color: props.color });
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
@@ -33,25 +34,15 @@ export default function Header(props) {
     }
 
     useEffect(() => {
-        /*
-        retrieve profile of user logged (if is logged)
-        */
         const fetchProfile = async () => {
-            const url = "http://localhost:3000/user/profile"
-            let config = {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            };
+            const url = "/user/profile";
             try {
-                let dataTmp = await axios.get(url, config);
-                let user = dataTmp.data;
-                console.log(user);
+                let user = await fetch('get', url, token)
                 setUser(user);
-
-            } catch (error) {
-                //setErrorMessage(error.message)
+            } catch(error) {
+                setErrorMessage(error.message)
             }
+            
 
         }
         if (token) fetchProfile();

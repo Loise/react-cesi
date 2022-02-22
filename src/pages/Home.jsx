@@ -1,33 +1,29 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 
 import StudentCard from '../components/StudentCard'
 import Grid from '@mui/material/Grid';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-
-function Home() {
+import { fetch } from '../tools/api'
+function Home(props) {
+    const {setErrorMessage} = props;
     const [students, setStudents] = useState([])
 
     const [studentAverage, setStudentAverage] = useState("");
 
-    const [errorMessage, setErrorMessage] = useState(null);
-
     const fetchData = async () => {
-        const url = "http://localhost:3000/student/"
+        const url = "/student/"
         try {
-            let dataTmp = await axios.get(url);
-            setStudents(dataTmp.data);
+            let dataTmp = await fetch('get', url, '');
+            setStudents(dataTmp);
         } catch (error) {
             setErrorMessage(error.message)
         }
     }
 
     const fetchAverage = async () => {
-        const url = "http://localhost:3000/student/average"
+        const url = "/student/average"
         try {
-            let dataTmp = await axios.get(url);
-            setStudentAverage(dataTmp.data);
+            let dataTmp = await fetch('get', url, '');
+            setStudentAverage(dataTmp);
         } catch (error) {
             setErrorMessage(error.message)
         }
@@ -38,14 +34,9 @@ function Home() {
     }, [])
 
     const deleteStudent = async (id) => {
-        const url = `http://localhost:3000/student/${id}`
+        const url = `/student/${id}`
         try {
-            let config = {
-                headers: {
-                    'Authorization': `Bearer ${localStorage.getItem('token')}`
-                }
-            };
-            await axios.delete(url, config);
+            await fetch('delete', url, localStorage.getItem('token'));
             await fetchData();
         } catch (error) {
             setErrorMessage(error.message)
@@ -56,12 +47,9 @@ function Home() {
         <>
             <h1>Home page</h1>
             <b>{studentAverage}</b><br /><br />
-            <Snackbar open={errorMessage !== null} autoHideDuration={6000} onClose={() => setErrorMessage(null)}>
-                <Alert severity="error" variant="filled">{errorMessage}</Alert>
-            </Snackbar>
             <Grid container spacing={2}>
                 {
-                    students.map((s) => <Grid item xs={3}><StudentCard student={s} deleteStudent={deleteStudent} /></Grid>)
+                    students.map((s) => <Grid item xs={3}><StudentCard {...props} student={s} deleteStudent={deleteStudent} /></Grid>)
                 }
             </Grid>
 

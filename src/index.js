@@ -1,24 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import Home from './pages/Home';
-import Login from './pages/Login';
-
-import Header from './components/Header'
-
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import App from './App'
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Header color="white"/>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/login" element={<Login />} />
-    </Routes>
-  </BrowserRouter>,
+  <App/>,
   document.getElementById('root')
 );

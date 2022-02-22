@@ -5,11 +5,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { makeStyles } from '@mui/styles';
 import axios from 'axios';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 
 import { useNavigate } from "react-router-dom";
-
+import { fetch } from '../tools/api'
 const useStyles = makeStyles({
     root: {
         width: "60%",
@@ -17,35 +15,32 @@ const useStyles = makeStyles({
     },
 });
 
-function Login() {
+function Login(props) {
+    const {setErrorMessage} = props;
     let navigate = useNavigate();
 
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const classes = useStyles();
-    const [errorMessage, setErrorMessage] = useState(null);
 
     const login = async () => {
-        const url = "http://localhost:3000/user/login"
+        const url = "/user/login/"
         try {
-            let res = await axios.post(url, {
+            let res = await fetch('post', url, '', {
                 email: mail,
                 password
-            })
-            let token = res.data.accessToken;
+            });
+            let token = res.accessToken;
             localStorage.setItem('token', token);
             navigate('/')
-        } catch (e) {
-            setErrorMessage(e.message)
+        } catch (error) {
+            setErrorMessage(error.message)
         }
     }
 
     return (
         <Paper>
             <h1>Login page</h1>
-            <Snackbar open={errorMessage !== null} autoHideDuration={6000} onClose={() => setErrorMessage(null)}>
-                <Alert severity="error" variant="filled">{errorMessage}</Alert>
-            </Snackbar>
             <div className={classes.root}>
                 <TextField
                     required

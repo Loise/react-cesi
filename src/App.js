@@ -1,30 +1,31 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from 'react';
+import './index.css';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
-function App() {
+import Header from './components/Header'
 
-const studentName= "Harry"
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
+export default function App() {
+  const [errorMessage, setErrorMessage] = useState(null);
 
+  const propsChild = {setErrorMessage}
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-          Created by {studentName}
-          {studentName === "Harry" && <div>enjoy</div>}
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Header color="white" />
+      <Routes>
+        <Route path="/" element={<Home {...propsChild} />} />
+        <Route path="/login" element={<Login {...propsChild} />} />
+      </Routes>
+      <Snackbar open={errorMessage !== null} autoHideDuration={6000} onClose={() => setErrorMessage(null)}>
+        <Alert severity="error" variant="filled">{errorMessage}</Alert>
+      </Snackbar>
+    </BrowserRouter>
   );
 }
-
-export default App;
