@@ -14,7 +14,7 @@ import {
 
 ReactDOM.render(
   <BrowserRouter>
-    <Header/>
+    <Header color="white"/>
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
