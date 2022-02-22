@@ -40,7 +40,12 @@ function Home() {
     const deleteStudent = async (id) => {
         const url = `http://localhost:3000/student/${id}`
         try {
-            await axios.delete(url);
+            let config = {
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            };
+            await axios.delete(url, config);
             await fetchData();
         } catch (error) {
             setErrorMessage(error.message)

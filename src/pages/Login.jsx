@@ -8,6 +8,8 @@ import axios from 'axios';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+import { useNavigate } from "react-router-dom";
+
 const useStyles = makeStyles({
     root: {
         width: "60%",
@@ -16,6 +18,8 @@ const useStyles = makeStyles({
 });
 
 function Login() {
+    let navigate = useNavigate();
+
     const [mail, setMail] = useState("")
     const [password, setPassword] = useState("")
     const classes = useStyles();
@@ -28,12 +32,14 @@ function Login() {
                 email: mail,
                 password
             })
-            console.log(res.data);
+            let token = res.data.accessToken;
+            localStorage.setItem('token', token);
+            navigate('/')
         } catch (e) {
             setErrorMessage(e.message)
         }
-
     }
+
     return (
         <Paper>
             <h1>Login page</h1>
