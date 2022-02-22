@@ -2,12 +2,17 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+
+const studentName= "Harry"
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
+          Created by {studentName}
+          {studentName === "Harry" && <div>enjoy</div>}
         </p>
         <a
           className="App-link"
