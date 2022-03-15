@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import './index.css';
 import Home from './pages/Home';
 import Login from './pages/Login';
@@ -29,3 +29,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+
