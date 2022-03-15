@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Grid from '@mui/material/Grid';
 import { fetch } from '../tools/api'
 
+
 const useStyles = makeStyles({
     navlink: {
         color: (props) => props.color || "white",
@@ -22,11 +23,12 @@ const useStyles = makeStyles({
 });
 
 export default function Header(props) {
-    const {setErrorMessage} = props;
+    const { setErrorMessage } = props;
     const classes = useStyles({ color: props.color });
     const navigate = useNavigate();
     const token = localStorage.getItem('token');
     const [user, setUser] = useState(null);
+
 
     const logout = () => {
         localStorage.removeItem('token');
@@ -39,10 +41,10 @@ export default function Header(props) {
             try {
                 let user = await fetch('get', url, token)
                 setUser(user);
-            } catch(error) {
+            } catch (error) {
                 setErrorMessage(error.message)
             }
-            
+
 
         }
         if (token) fetchProfile();
@@ -56,6 +58,7 @@ export default function Header(props) {
                         <NavLink to="/" className={classes.navlink}>Home page</NavLink>
                     </Grid>
                     <Grid item xs={6} container justifyContent="flex-end" alignItems="center">
+                        
                         {
                             token ?
                                 <>

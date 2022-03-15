@@ -3,11 +3,25 @@ import React, { useEffect, useState } from 'react';
 import StudentCard from '../components/StudentCard'
 import Grid from '@mui/material/Grid';
 import { fetch } from '../tools/api'
+import socketIOClient from "socket.io-client";
+
+const ENDPOINT = "http://127.0.0.1:3000";
+
 function Home(props) {
-    const {setErrorMessage} = props;
+    const { setErrorMessage } = props;
     const [students, setStudents] = useState([])
 
     const [studentAverage, setStudentAverage] = useState("");
+
+    const [response, setResponse] = useState("");
+
+    useEffect(() => {
+        const socket = socketIOClient(ENDPOINT);
+        socket.on("FromAPI", data => {
+            setResponse(data);
+        });
+    }, []);
+
 
     const fetchData = async () => {
         const url = "/student/"
@@ -52,6 +66,9 @@ function Home(props) {
                     students.map((s) => <Grid item xs={3}><StudentCard {...props} student={s} deleteStudent={deleteStudent} /></Grid>)
                 }
             </Grid>
+            <p>
+                It's <time dateTime={response}>{response}</time>
+            </p>
 
         </>
     )
