@@ -17,8 +17,11 @@ function Home(props) {
     const [message, setMessage] = useState("");
     const [newMessage, setNewMessage] = useState([])
 
+    const [userName, setUserName] = useState("");
+    const [isUserName, setIsUserName] = useState(false);
+
     useEffect(() => {
-        
+
         socket.on("FromAPI", data => {
             setResponse(data);
         });
@@ -67,20 +70,32 @@ function Home(props) {
     }
 
     const sendMessage = () => {
-        socket.emit("chat message", message)
+        socket.emit("chat message", `${userName} : ${message}`)
         setMessage("")
     }
 
     return (
         <>
             <h1>Home page</h1>
-            <b>Send message to everyone :</b><br />
-            <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
-            <button type="button" onClick={sendMessage}>Send</button>
+            {
+                isUserName ?
+                    <>
+                        <b>Send message to everyone :</b><br />
+                        <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
+                        <button type="button" onClick={sendMessage}>Send</button>
+                    </>
+                    :
+                    <>
+                        <b>What is your name:</b><br />
+                        <input type="text" value={userName} onChange={(event) => setUserName(event.target.value)} />
+                        <button type="button" onClick={() => setIsUserName(true)}>Save</button>
+                    </>
+            }
+
             <br /><br />
             <b>Last messages ({newMessage.length}):
-             {newMessage.map((m) => <p>{m}</p>)}
-             </b>
+                {newMessage.map((m) => <p>{m}</p>)}
+            </b>
             <br /><br />
             <b>{studentAverage}</b>
             <br /><br />
