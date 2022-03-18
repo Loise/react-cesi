@@ -6,21 +6,23 @@ import { fetch } from '../tools/api'
 import socketIOClient from "socket.io-client";
 
 const ENDPOINT = "http://127.0.0.1:3000";
+const socket = socketIOClient(ENDPOINT);
 
 function Home(props) {
     const { setErrorMessage } = props;
     const [students, setStudents] = useState([])
 
     const [studentAverage, setStudentAverage] = useState("");
-
     const [response, setResponse] = useState("");
-
+    const [message, setMessage] = useState("");
+    const [newMessage, setNewMessage] = useState([])
     useEffect(() => {
-        const socket = socketIOClient(ENDPOINT);
+        
         socket.on("FromAPI", data => {
             setResponse(data);
         });
     }, []);
+
 
 
     const fetchData = async () => {
@@ -57,10 +59,19 @@ function Home(props) {
         }
     }
 
+    const sendMessage = () => {
+        socket.emit("chat message", message)
+    }
+
     return (
         <>
             <h1>Home page</h1>
-            <b>{studentAverage}</b><br /><br />
+            <b>Send message to everyone :</b><br />
+            <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
+            <button type="button" onClick={sendMessage}>Send</button>
+            <br /><br />
+            <b>{studentAverage}</b>
+            <br /><br />
             <Grid container spacing={2}>
                 {
                     students.map((s) => <Grid item xs={3}><StudentCard {...props} student={s} deleteStudent={deleteStudent} /></Grid>)
