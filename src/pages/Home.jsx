@@ -16,15 +16,19 @@ function Home(props) {
     const [response, setResponse] = useState("");
     const [message, setMessage] = useState("");
     const [newMessage, setNewMessage] = useState([])
+
     useEffect(() => {
         
         socket.on("FromAPI", data => {
             setResponse(data);
         });
-        socket.on("new message", data => {
-            setNewMessage(data);
-        });
     }, []);
+
+    useEffect(() => {
+        socket.on("new message", data => {
+            setNewMessage([...newMessage, data]);
+        });
+    }, [newMessage]);
 
 
 
@@ -74,7 +78,9 @@ function Home(props) {
             <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
             <button type="button" onClick={sendMessage}>Send</button>
             <br /><br />
-            <b>Last message: {newMessage}</b>
+            <b>Last messages ({newMessage.length}):
+             {newMessage.map((m) => <p>{m}</p>)}
+             </b>
             <br /><br />
             <b>{studentAverage}</b>
             <br /><br />
