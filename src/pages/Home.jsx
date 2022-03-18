@@ -21,6 +21,9 @@ function Home(props) {
         socket.on("FromAPI", data => {
             setResponse(data);
         });
+        socket.on("new message", data => {
+            setNewMessage(data);
+        });
     }, []);
 
 
@@ -61,6 +64,7 @@ function Home(props) {
 
     const sendMessage = () => {
         socket.emit("chat message", message)
+        setMessage("")
     }
 
     return (
@@ -69,6 +73,8 @@ function Home(props) {
             <b>Send message to everyone :</b><br />
             <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
             <button type="button" onClick={sendMessage}>Send</button>
+            <br /><br />
+            <b>Last message: {newMessage}</b>
             <br /><br />
             <b>{studentAverage}</b>
             <br /><br />
