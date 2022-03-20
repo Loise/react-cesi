@@ -15,6 +15,8 @@ function Home(props) {
     const [studentAverage, setStudentAverage] = useState("");
     const [response, setResponse] = useState("");
     const [message, setMessage] = useState("");
+
+    const [newLogin, setNewLogin] = useState("");
     const [newMessage, setNewMessage] = useState([])
 
     const [userName, setUserName] = useState("");
@@ -24,6 +26,10 @@ function Home(props) {
 
         socket.on("FromAPI", data => {
             setResponse(data);
+        });
+
+        socket.on("new login", data => {
+            setNewLogin(data);
         });
     }, []);
 
@@ -107,6 +113,7 @@ function Home(props) {
             <p>
                 It's <time dateTime={response}>{response}</time>
             </p>
+            <p>{newLogin}</p>
 
         </>
     )
