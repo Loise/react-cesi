@@ -30,11 +30,20 @@ function Home(props) {
 
         socket.on("new login", data => {
             setNewLogin(data);
+            setUserName(data);
+            setIsUserName(true);
         });
+
+
     }, []);
 
     useEffect(() => {
         socket.on("new message", data => {
+            setNewMessage([...newMessage, data]);
+        });
+
+
+        socket.on("default", data => {
             setNewMessage([...newMessage, data]);
         });
     }, [newMessage]);
@@ -77,6 +86,7 @@ function Home(props) {
 
     const sendMessage = () => {
         socket.emit("chat message", `${userName} : ${message}`)
+        socket.emit("joinRoom", {username: userName, roomname: "default"})
         setMessage("")
     }
 
