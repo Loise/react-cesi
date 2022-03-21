@@ -38,22 +38,7 @@ function Home(props) {
             setUserName(data);
             setIsUserName(true);
         });
-
-
     }, []);
-
-    /*useEffect(() => {
-        socket.on("new message", data => {
-            setNewMessage([...newMessage, data]);
-        });
-
-
-        socket.on("default", data => {
-            setNewMessage([...newMessage, data]);
-        });
-    }, [newMessage]);*/
-
-
 
     useEffect(() => {
         if(rooms.includes(roomName) ) {
@@ -61,7 +46,6 @@ function Home(props) {
                 setNewMessage([...newMessage, data]);
             });
         }
-        
     }, [newMessage, rooms]);
 
 
