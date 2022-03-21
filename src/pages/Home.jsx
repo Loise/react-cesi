@@ -60,6 +60,17 @@ function Home(props) {
     }, [newMessage, roomName]);
 
 
+    const fetchMessages = async () => {
+        const url = "/message/"
+        try {
+            let dataTmp = await fetch('get', url, localStorage.getItem('token'));
+            
+            setNewMessage(dataTmp.map((m) => `${m.name} on ${m.room} : ${m.message} - ${new Date(m.created_at).toLocaleDateString()} ${new Date(m.created_at).toLocaleTimeString()}`));
+        } catch (error) {
+            setErrorMessage(error.message)
+        }
+    }
+
     const fetchData = async () => {
         const url = "/student/"
         try {
@@ -81,7 +92,7 @@ function Home(props) {
     }
 
     useEffect(() => {
-        Promise.all([fetchData(), fetchAverage()])
+        Promise.all([fetchData(), fetchAverage(), fetchMessages()])
     }, [])
 
     const deleteStudent = async (id) => {
@@ -94,9 +105,31 @@ function Home(props) {
         }
     }
 
-    const sendMessage = () => {
-        //
+    const sendMessage = async () => {
         socket.emit("chat message", { username: userName, roomname: roomName, msg: message })
+        const url = `/message`
+        try {
+            //await fetch('post', url, localStorage.getItem('token'));
+            console.log(localStorage.getItem('token'))
+            await fetch('post', url, localStorage.getItem('token'), {name: userName,
+                room: roomName,
+                message: message });
+            /*await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token'),
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({name: userName,
+                    room: roomName,
+                    message: message })
+            });*/
+
+        } catch (error) {
+            console.log(error)
+            setErrorMessage(error.message)
+        }
         setMessage("")
     }
 
