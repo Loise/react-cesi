@@ -25,6 +25,8 @@ function Home(props) {
 
     const [roomName, setRoomName] = useState("default");
 
+    const [rooms, setRooms] = useState(["default"]);
+
     useEffect(() => {
 
         socket.on("FromAPI", data => {
@@ -54,10 +56,13 @@ function Home(props) {
 
 
     useEffect(() => {
-        socket.on(roomName, data => {
-            setNewMessage([...newMessage, data]);
-        });
-    }, [newMessage, roomName]);
+        if(rooms.includes(roomName) ) {
+            socket.on(roomName, data => {
+                setNewMessage([...newMessage, data]);
+            });
+        }
+        
+    }, [newMessage, rooms]);
 
 
     const fetchMessages = async () => {
@@ -134,6 +139,7 @@ function Home(props) {
     }
 
     const joinRoom = () => {
+        if(!rooms.includes(roomName)) setRooms([...rooms, roomName])
         socket.emit("joinRoom", { username: userName, roomname: roomName })
     }
 
