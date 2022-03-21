@@ -22,6 +22,9 @@ function Home(props) {
     const [userName, setUserName] = useState("");
     const [isUserName, setIsUserName] = useState(false);
 
+
+    const [roomName, setRoomName] = useState("default");
+
     useEffect(() => {
 
         socket.on("FromAPI", data => {
@@ -37,7 +40,7 @@ function Home(props) {
 
     }, []);
 
-    useEffect(() => {
+    /*useEffect(() => {
         socket.on("new message", data => {
             setNewMessage([...newMessage, data]);
         });
@@ -46,8 +49,15 @@ function Home(props) {
         socket.on("default", data => {
             setNewMessage([...newMessage, data]);
         });
-    }, [newMessage]);
+    }, [newMessage]);*/
 
+
+
+    useEffect(() => {
+        socket.on(roomName, data => {
+            setNewMessage([...newMessage, data]);
+        });
+    }, [newMessage, roomName]);
 
 
     const fetchData = async () => {
@@ -85,10 +95,15 @@ function Home(props) {
     }
 
     const sendMessage = () => {
-        socket.emit("chat message", `${userName} : ${message}`)
-        socket.emit("joinRoom", {username: userName, roomname: "default"})
+        //
+        socket.emit("chat message", { username: userName, roomname: roomName, msg: message })
         setMessage("")
     }
+
+    const joinRoom = () => {
+        socket.emit("joinRoom", { username: userName, roomname: roomName })
+    }
+
 
     return (
         <>
@@ -96,8 +111,12 @@ function Home(props) {
             {
                 isUserName ?
                     <>
-                        <b>Send message to everyone :</b><br />
-                        <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} />
+                        <b>Join room :</b><br />
+                        <input type="text" value={roomName} onChange={(event) => setRoomName(event.target.value)} /> <br />
+                        <button type="button" onClick={joinRoom}>Join</button><br /><br />
+                        <b>Send message :</b><br />
+                        <input type="text" value={message} onChange={(event) => setMessage(event.target.value)} /> <br />
+
                         <button type="button" onClick={sendMessage}>Send</button>
                     </>
                     :
